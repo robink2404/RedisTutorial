@@ -1,0 +1,210 @@
+127.0.0.1:6379> ping
+PONG
+127.0.0.1:6379> set testingredis 4
+OK
+127.0.0.1:6379> get testingredis
+"4"
+127.0.0.1:6379> set bike:test 1
+OK
+127.0.0.1:6379> get bike
+(nil)
+127.0.0.1:6379> get bike:test
+"1"
+127.0.0.1:6379> mget cars:1 cars:2 cars:3 cars:4 cars:5
+1) "Toyota"
+2) "Honda"
+3) "ford"
+4) "kia"
+5) "suzuki"
+127.0.0.1:6379> mget cars:1 cars:2 cars:3 cars:4 cars:5 cars:6
+1) "Toyota"
+2) "Honda"
+3) "ford"
+4) "kia"
+5) "suzuki"
+6) (nil)
+127.0.0.1:6379> mset laptops:1 apple xx laptops:2 lenovo nx
+OK
+127.0.0.1:6379> mget laptops:1
+1) "apple"
+127.0.0.1:6379> mget laptops:1 apple nx
+1) "apple"
+2) (nil)
+3) (nil)
+127.0.0.1:6379> msetx cars:1 mahindra cars2: tata
+(error) ERR unknown command 'msetx', with args beginning with: 'cars:1' 'mahindra' 'cars2:' 'tata' 
+127.0.0.1:6379> msetnx cars:1 mahindra cars2: tata
+(integer) 0
+127.0.0.1:6379> mget cars:1 cars:2 cars:3 cars:4 cars:5 cars:6
+1) "Toyota"
+2) "Honda"
+3) "ford"
+4) "kia"
+5) "suzuki"
+6) (nil)
+127.0.0.1:6379> msetxx cars:1 mahindra cars2: tata
+(error) ERR unknown command 'msetxx', with args beginning with: 'cars:1' 'mahindra' 'cars2:' 'tata' 
+127.0.0.1:6379> mset cars:1 mahindra xx cars:2 tata nx
+OK
+127.0.0.1:6379> mget cars:1 cars:2 cars:3 cars:4 cars:5 cars:6
+1) "mahindra"
+2) "Honda"
+3) "ford"
+4) "kia"
+5) "suzuki"
+6) (nil)
+127.0.0.1:6379> MSETNX
+(error) ERR wrong number of arguments for 'msetnx' command
+127.0.0.1:6379> MSETNX
+(error) ERR wrong number of arguments for 'msetnx' command
+127.0.0.1:6379> MSETNX cars:1 tata cars:7 ashoka
+(integer) 0
+127.0.0.1:6379> mget cars:1 cars:2 cars:3 cars:4 cars:5 cars:6
+1) "mahindra"
+2) "Honda"
+3) "ford"
+4) "kia"
+5) "suzuki"
+6) (nil)
+127.0.0.1:6379> msetnx  cars:1 tata cars:7 ashoka
+(integer) 0
+127.0.0.1:6379> MSETXX cars:1 tata cars:7 ashoka
+(error) ERR unknown command 'MSETXX', with args beginning with: 'cars:1' 'tata' 'cars:7' 'ashoka' 
+127.0.0.1:6379> MSETXX cars:8 tata cars:9 ashoka
+(error) ERR unknown command 'MSETXX', with args beginning with: 'cars:8' 'tata' 'cars:9' 'ashoka' 
+127.0.0.1:6379> MSETNX cars:8 tata cars:9 ashoka
+(integer) 1
+127.0.0.1:6379> msetnx cars:14 holala cars:15 lolala
+(integer) 1
+127.0.0.1:6379> mget cars:14 cars:15
+1) "holala"
+2) "lolala"
+127.0.0.1:6379> msetnx cars:15 nolala cars:16 holala
+(integer) 0
+127.0.0.1:6379> mget cars:15
+1) "lolala"
+127.0.0.1:6379> mget cars:16
+1) (nil)
+127.0.0.1:6379> set counter 0
+OK
+127.0.0.1:6379> incr counter
+(integer) 1
+127.0.0.1:6379> get counter
+"1"
+127.0.0.1:6379> incrby counter 5
+(integer) 6
+127.0.0.1:6379> get counter
+"6"
+127.0.0.1:6379> set cnts:cnt1 2 cnts:cnt2 2
+(error) ERR syntax error
+127.0.0.1:6379> mset cnts:cnt1 2 cnts:cnt2 2
+OK
+127.0.0.1:6379> incr cnt1
+(integer) 1
+127.0.0.1:6379> incr cnt1 cnt2
+(error) ERR wrong number of arguments for 'incr' command
+127.0.0.1:6379> del cars:17
+(integer) 0
+127.0.0.1:6379> del cars:16
+(integer) 0
+127.0.0.1:6379> del cars:15
+(integer) 1
+127.0.0.1:6379> del laptops:*
+(integer) 0
+127.0.0.1:6379> get laptops:1
+"apple"
+127.0.0.1:6379> delete laptops:*
+(error) ERR unknown command 'delete', with args beginning with: 'laptops:*' 
+127.0.0.1:6379> DELETE laptops:*
+(error) ERR unknown command 'DELETE', with args beginning with: 'laptops:*' 
+127.0.0.1:6379> DELETE cars:*
+(error) ERR unknown command 'DELETE', with args beginning with: 'cars:*' 
+127.0.0.1:6379> 
+127.0.0.1:6379> del laptops:*
+(integer) 0
+127.0.0.1:6379> get laptops:1
+"apple"
+127.0.0.1:6379> DEL $(redis-cli KEYS "laptops:*")
+Invalid argument(s)
+127.0.0.1:6379> del $(redis-cli keys "laptops:*")
+Invalid argument(s)
+127.0.0.1:6379> redis-cli --scan --pattern "laptops:*" | xargs redis-cli del
+(error) ERR unknown command 'redis-cli', with args beginning with: '--scan' '--pattern' 'laptops:*' '|' 'xargs' 'redis-cli' 'del' 
+127.0.0.1:6379> append cars:1 "and tata"
+(integer) 14
+127.0.0.1:6379> get cars:1
+"Toyotaand tata"
+127.0.0.1:6379> scan 0 match cars:*
+1) "26"
+2) 1) "cars:2"
+   2) "cars:5"
+   3) "cars:3"
+127.0.0.1:6379> mget cars:*
+1) (nil)
+127.0.0.1:6379> scan 0 match cars:*
+1) "26"
+2) 1) "cars:2"
+   2) "cars:5"
+   3) "cars:3"
+127.0.0.1:6379> set cars:1 tata 3
+(error) ERR syntax error
+127.0.0.1:6379> set cars:50 tata 3
+(error) ERR syntax error
+127.0.0.1:6379> set cars:50 tata ex 3
+OK
+127.0.0.1:6379> set cars:50 tata ex 5
+OK
+127.0.0.1:6379> expires cars:5 5
+(error) ERR unknown command 'expires', with args beginning with: 'cars:5' '5' 
+127.0.0.1:6379> expire cars:3 5
+(integer) 1
+127.0.0.1:6379> expire cars:3 5
+(integer) 0
+127.0.0.1:6379> expire cars:2 cars:1 5
+(error) ERR Unsupported option 5
+127.0.0.1:6379> .0.1:6379> expire cars:2 cars:1 5
+(error) ERR unknown command '.0.1:6379>', with args beginning with: 'expire' 'cars:2' 'cars:1' '5' 
+127.0.0.1:6379> (error) ERR Unsupported option 5
+(error) ERR unknown command '(error)', with args beginning with: 'ERR' 'Unsupported' 'option' '5' 
+127.0.0.1:6379> 127.0.0.1:6379> 
+(error) ERR unknown command '127.0.0.1:6379>', with args beginning with: 
+127.0.0.1:6379> msetnx cars:21 random1  ex 10 cars:22 random22 ex 8
+(integer) 1
+127.0.0.1:6379> mset cars:21 random1  ex 10 cars:22 random22 ex 8
+OK
+127.0.0.1:6379> mset cars:23 random1  ex 10 cars:24 random22 ex 8
+OK
+127.0.0.1:6379> ttl cars:9
+(integer) -1
+127.0.0.1:6379> pexpire cars:9 10*1000
+(error) ERR value is not an integer or out of range
+127.0.0.1:6379> pexpire cars:9 10000
+(integer) 1
+127.0.0.1:6379> ttl cars:9
+(integer) 5
+127.0.0.1:6379> ttl cars:9
+(integer) -2
+127.0.0.1:6379> del tata
+(integer) 1
+127.0.0.1:6379> del xx
+(integer) 1
+127.0.0.1:6379> del cnt1 ex
+(integer) 2
+127.0.0.1:6379> del foo
+(integer) 1
+127.0.0.1:6379> del lenovo
+(integer) 1
+127.0.0.1:6379> del testing redis
+(integer) 0
+127.0.0.1:6379> del testingredis
+(integer) 1
+127.0.0.1:6379> del test
+(integer) 1
+127.0.0.1:6379> del bike:test
+(integer) 1
+127.0.0.1:6379> del laptops:1
+(integer) 1
+127.0.0.1:6379> del counters
+(integer) 0
+127.0.0.1:6379> del counter
+(integer) 1

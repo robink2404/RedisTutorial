@@ -1,0 +1,53 @@
+127.0.0.1:6379> sadd set:items 5
+(integer) 1
+127.0.0.1:6379> sadd set:items 4 6 7 8
+(integer) 4
+127.0.0.1:6379> srem set:items 4
+(integer) 1
+127.0.0.1:6379> sismember set:item 6
+(integer) 0
+127.0.0.1:6379> sismember set:items 6
+(integer) 1
+127.0.0.1:6379> sre, set:items 5 6
+(error) ERR unknown command 'sre,', with args beginning with: 'set:items' '5' '6' 
+127.0.0.1:6379> srem set:items 5 6
+(integer) 2
+127.0.0.1:6379> sadd set:items 1 2 3 4 5 6
+(integer) 6
+127.0.0.1:6379> sadd set:items 9
+(integer) 1
+127.0.0.1:6379> sadd set:items1 5 6 7
+(integer) 3
+127.0.0.1:6379> sinter set:items set:items1
+1) "5"
+2) "6"
+3) "7"
+127.0.0.1:6379> scard set:items
+(integer) 9
+127.0.0.1:6379> sscan set:items 0
+1) "0"
+2) 1) "1"
+   2) "2"
+   3) "3"
+   4) "4"
+   5) "5"
+   6) "6"
+   7) "7"
+   8) "8"
+   9) "9"
+127.0.0.1:6379> smembers set:items
+1) "1"
+2) "2"
+3) "3"
+4) "4"
+5) "5"
+6) "6"
+7) "7"
+8) "8"
+9) "9"
+127.0.0.1:6379> smembers set:items 5
+(error) ERR wrong number of arguments for 'smembers' command
+127.0.0.1:6379> sismember set:items 6
+(integer) 1
+127.0.0.1:6379> sinter goset:cars goset:indiancars
+(empty array)

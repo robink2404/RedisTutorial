@@ -1,0 +1,14 @@
+127.0.0.1:6379> publish message go to hell
+(error) ERR wrong number of arguments for 'publish' command
+127.0.0.1:6379> publish message hey
+(integer) 2
+127.0.0.1:6379> publish email "hello how are u"
+(integer) 1
+127.0.0.1:6379> publish text "go go go"
+(integer) 0
+127.0.0.1:6379> publish sms "go go go"
+(integer) 1
+127.0.0.1:6379> publish message nothing
+(integer) 2
+127.0.0.1:6379> publish message hell
+(integer) 2

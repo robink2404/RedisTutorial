@@ -1,0 +1,78 @@
+127.0.0.1:6379> xadd stream:sendor * temp 45 pressure 22 humidity 22%
+"1770766959411-0"
+127.0.0.1:6379> xadd stream:sendor * temp 22 pressure 3 humidity 45%
+"1770767083140-0"
+127.0.0.1:6379> xadd stream:sendor * temp -2 pressure 5 humidity 75%
+"1770767124923-0"
+127.0.0.1:6379> xrange stream:key 1770766959411-0 + count 1
+(empty array)
+127.0.0.1:6379> xrange stream:key 1770766959411-0 + count 100
+(empty array)
+127.0.0.1:6379> xrange stream:key 1770766959411-0 1770767124923-0 
+(empty array)
+127.0.0.1:6379> xrange stream:key 1770766959411-0 1770767124923-0 count 3
+(empty array)
+127.0.0.1:6379> xrange stream:sendor 1770766959411-0
+(error) ERR wrong number of arguments for 'xrange' command
+127.0.0.1:6379> xrange stream:sendor 1770766959411-0 + count 3
+1) 1) "1770766959411-0"
+   2) 1) "temp"
+      2) "45"
+      3) "pressure"
+      4) "22"
+      5) "humidity"
+      6) "22%"
+2) 1) "1770767083140-0"
+   2) 1) "temp"
+      2) "22"
+      3) "pressure"
+      4) "3"
+      5) "humidity"
+      6) "45%"
+3) 1) "1770767124923-0"
+   2) 1) "temp"
+      2) "-2"
+      3) "pressure"
+      4) "5"
+      5) "humidity"
+      6) "75%"
+127.0.0.1:6379> xrange stream:sendor 1770766959411-0 + count 1
+1) 1) "1770766959411-0"
+   2) 1) "temp"
+      2) "45"
+      3) "pressure"
+      4) "22"
+      5) "humidity"
+      6) "22%"
+127.0.0.1:6379> xlen stream:sendor
+(integer) 3
+127.0.0.1:6379> xread count 2 clock 3000 stream stream:sendor
+(error) ERR syntax error
+127.0.0.1:6379> xread count 3 blcok 4000 streams stream:sendor
+(error) ERR syntax error
+127.0.0.1:6379> xread count 3 blcok 4000 streams stream:sendor $
+(error) ERR syntax error
+127.0.0.1:6379> xread count 3 block 4000 streams stream:sendor $
+(nil)
+(4.06s)
+127.0.0.1:6379> xread count 3 block 4000 streams stream:sendor 
+(error) ERR Unbalanced 'xread' list of streams: for each stream key an ID or '$' must be specified.
+127.0.0.1:6379> xread count 3 block 4000 streams stream:sendor 1770767124923-0
+(nil)
+(4.06s)
+127.0.0.1:6379> xread count 3 block 4000 streams stream:sendor 1770766959411-0
+1) 1) "stream:sendor"
+   2) 1) 1) "1770767083140-0"
+         2) 1) "temp"
+            2) "22"
+            3) "pressure"
+            4) "3"
+            5) "humidity"
+            6) "45%"
+      2) 1) "1770767124923-0"
+         2) 1) "temp"
+            2) "-2"
+            3) "pressure"
+            4) "5"
+            5) "humidity"
+            6) "75%"

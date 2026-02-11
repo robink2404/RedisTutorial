@@ -1,0 +1,22 @@
+127.0.0.1:6379> subscribe message sms email
+1) "subscribe"
+2) "message"
+3) (integer) 1
+1) "subscribe"
+2) "sms"
+3) (integer) 2
+1) "subscribe"
+2) "email"
+3) (integer) 3
+1) "message"
+2) "message"
+3) "hey"
+1) "message"
+2) "email"
+3) "hello how are u"
+1) "message"
+2) "sms"
+3) "go go go"
+1) "message"
+2) "message"
+3) "nothing"

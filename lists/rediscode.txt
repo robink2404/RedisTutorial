@@ -1,0 +1,176 @@
+127.0.0.1:6379> lpush message "how are you"
+(integer) 1
+127.0.0.1:6379> lpush list:message "how are you
+Invalid argument(s)
+127.0.0.1:6379> lpush list:message "how are you"
+(integer) 1
+127.0.0.1:6379> del message
+(integer) 1
+127.0.0.1:6379> lpop list:message
+"how are you"
+127.0.0.1:6379> rpush list:message 78
+(integer) 1
+127.0.0.1:6379> lpush list:message 56
+(integer) 2
+127.0.0.1:6379> rpush list:message hgf
+(integer) 3
+127.0.0.1:6379> rpush list:message "ghfy" 
+(integer) 4
+127.0.0.1:6379> lpush list:message 90 ex 10
+(integer) 7
+127.0.0.1:6379> expire message 10
+(integer) 0
+127.0.0.1:6379> push list:random 9
+(error) ERR unknown command 'push', with args beginning with: 'list:random' '9' 
+127.0.0.1:6379> lpush list:random 9
+(integer) 1
+127.0.0.1:6379> expire random 10
+(integer) 0
+127.0.0.1:6379> expire random:0 10
+(integer) 0
+127.0.0.1:6379> EXPIRE cars:list 10
+(integer) 0
+127.0.0.1:6379> expire list:random 10
+(integer) 1
+127.0.0.1:6379> lpush list:random 10 
+(integer) 1
+127.0.0.1:6379> lpush list:test 5
+(integer) 1
+127.0.0.1:6379> del list:test
+(integer) 1
+127.0.0.1:6379> blpop list:test 20
+(nil)
+(20.04s)
+127.0.0.1:6379> del list:test
+(integer) 0
+127.0.0.1:6379> lpush list:test 5
+(integer) 1
+127.0.0.1:6379> del list:test
+(integer) 1
+127.0.0.1:6379> lpush list:test 5 ex 10
+(integer) 3
+127.0.0.1:6379> lpush list:test 5 ex 10
+(integer) 6
+127.0.0.1:6379> expire list:test 10
+(integer) 1
+127.0.0.1:6379> set list:test ex 10
+(error) ERR syntax error
+127.0.0.1:6379> set list:test 5 ex 10
+OK
+127.0.0.1:6379> set list:test 5
+OK
+127.0.0.1:6379> lpush list:test 7
+(error) WRONGTYPE Operation against a key holding the wrong kind of value
+127.0.0.1:6379> multi
+OK
+127.0.0.1:6379(TX)> del list:test
+QUEUED
+127.0.0.1:6379(TX)> lpush list:test 789
+QUEUED
+127.0.0.1:6379(TX)> expire list:test 15
+QUEUED
+127.0.0.1:6379(TX)> exec
+1) (integer) 1
+2) (integer) 1
+3) (integer) 1
+127.0.0.1:6379> lpush test:list1 5 newone 6
+(integer) 3
+127.0.0.1:6379> list1 5 newone 6
+(error) ERR unknown command 'list1', with args beginning with: '5' 'newone' '6' 
+127.0.0.1:6379> (integer) 3
+(error) ERR unknown command '(integer)', with args beginning with: '3' 
+127.0.0.1:6379> del test:list1
+(integer) 1
+127.0.0.1:6379> lpush list:message 4 5 6 7 8 9
+(integer) 13
+127.0.0.1:6379> lpop list:message 
+"9"
+127.0.0.1:6379> lrange list:message
+(error) ERR wrong number of arguments for 'lrange' command
+127.0.0.1:6379> lmove list:message test left|right
+(error) ERR wrong number of arguments for 'lmove' command
+127.0.0.1:6379> lmove list:message test 
+(error) ERR wrong number of arguments for 'lmove' command
+127.0.0.1:6379> llen list:message
+(integer) 12
+127.0.0.1:6379> lmove list:message text left left
+"8"
+127.0.0.1:6379> del text
+(integer) 1
+127.0.0.1:6379> lmove list:message list:text left right
+"7"
+127.0.0.1:6379> lmove list:message list:text left right
+"6"
+127.0.0.1:6379> ltrim list:text 0 1
+OK
+127.0.0.1:6379> lpush list:text 7 8 9 0 6  5 4 3 2 1
+(integer) 12
+127.0.0.1:6379> lrange list:text 0 -1
+ 1) "1"
+ 2) "2"
+ 3) "3"
+ 4) "4"
+ 5) "5"
+ 6) "6"
+ 7) "0"
+ 8) "9"
+ 9) "8"
+10) "7"
+11) "7"
+12) "6"
+127.0.0.1:6379> lrange list:text 0 2
+1) "1"
+2) "2"
+3) "3"
+127.0.0.1:6379> lrange list:text 0 12
+ 1) "1"
+ 2) "2"
+ 3) "3"
+ 4) "4"
+ 5) "5"
+ 6) "6"
+ 7) "0"
+ 8) "9"
+ 9) "8"
+10) "7"
+11) "7"
+12) "6"
+127.0.0.1:6379> lrange list:text 0 13
+ 1) "1"
+ 2) "2"
+ 3) "3"
+ 4) "4"
+ 5) "5"
+ 6) "6"
+ 7) "0"
+ 8) "9"
+ 9) "8"
+10) "7"
+11) "7"
+12) "6"
+127.0.0.1:6379> ltrim list:text 0 6
+OK
+127.0.0.1:6379> ltrim list:test 0 2
+OK
+127.0.0.1:6379> blmove list:test message left left
+(error) ERR wrong number of arguments for 'blmove' command
+127.0.0.1:6379> blmove list:text message left left
+(error) ERR wrong number of arguments for 'blmove' command
+127.0.0.1:6379> blmove list:text list:message 10
+(error) ERR wrong number of arguments for 'blmove' command
+127.0.0.1:6379> blmove list:text list:message left left 10
+"1"
+127.0.0.1:6379> ltrim list:text 0 2
+OK
+127.0.0.1:6379> blmove list:text list:message left left 10
+"2"
+127.0.0.1:6379> blmove list:text list:message left left 10
+"3"
+127.0.0.1:6379> blmove list:text list:message left left 10
+"4"
+127.0.0.1:6379> blmove list:text list:message left left 10
+(nil)
+127.0.0.1:6379> lpop golist:queue 3
+1) "2"
+2) "5"
+3) "76"

@@ -1,0 +1,38 @@
+127.0.0.1:6379> hset hashmap:bike1 name royalEnfield model hunter350 price 170000
+(integer) 3
+127.0.0.1:6379> hget hashmap:bike1
+(error) ERR wrong number of arguments for 'hget' command
+127.0.0.1:6379> hget hashmap:bike1 name
+"royalEnfield"
+127.0.0.1:6379> hgetall hashmap:bike1
+1) "name"
+2) "royalEnfield"
+3) "model"
+4) "hunter350"
+5) "price"
+6) "170000"
+127.0.0.1:6379> hmget hashmap:bike1 name price
+1) "royalEnfield"
+2) "170000"
+127.0.0.1:6379> hincrby hashmap:bike1 price 20000
+(integer) 190000
+127.0.0.1:6379> hincrby hashmap:bike1 name 20000
+(error) ERR hash value is not an integer
+127.0.0.1:6379> hgetall hashmap:bike1
+1) "name"
+2) "royalEnfield"
+3) "model"
+4) "hunter350"
+5) "price"
+6) "190000"
+127.0.0.1:6379> hdecby hashmap:bike1 price 20000
+(error) ERR unknown command 'hdecby', with args beginning with: 'hashmap:bike1' 'price' '20000' 
+127.0.0.1:6379> hset hashmap:bike1 yearOfpurshace 2021
+(integer) 1
+127.0.0.1:6379> hincrby hashmap:bike1 price 1 yearOfpurshace 1
+(error) ERR wrong number of arguments for 'hincrby' command
+
+127.0.0.1:6379> hgetall hashmap:bik1
+(empty array)
+127.0.0.1:6379> hget hashmap:bike1 price
+"190000"

@@ -1,0 +1,14 @@
+127.0.0.1:6379> geoadd geospatial:loc 10.4515 52.5210 berlin 
+(integer) 1
+127.0.0.1:6379> geoadd geospatial:loc 2.3522 48.8566 france -0.1278 51.5074 london
+(integer) 2
+127.0.0.1:6379> geosearch geospatial:loc fromlonlat 10.4512 52.5220 byradius 10 km
+1) "berlin"
+127.0.0.1:6379> geosearch geospatial:loc fromlonlat 10.4512 52.5220 byradius 200 km
+1) "berlin"
+127.0.0.1:6379> geosearch geospatial:loc fromlonlat 10.4512 52.5220 byradius 400 km
+1) "berlin"
+127.0.0.1:6379> geosearch geospatial:loc fromlonlat 10.4512 52.5220 byradius 4000 km
+1) "france"
+2) "berlin"
+3) "london"

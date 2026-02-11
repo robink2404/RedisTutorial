@@ -1,0 +1,40 @@
+127.0.0.1:6379> zadd sortedset:list1 5 1
+(integer) 1
+127.0.0.1:6379> zadd sortedset:list1 5 0
+(integer) 1
+127.0.0.1:6379> zadd sortedset:list1 4 0
+(integer) 0
+127.0.0.1:6379> del sortedset:list1
+(integer) 1
+127.0.0.1:6379> zadd sortedset:list1 7 ashok
+(integer) 1
+127.0.0.1:6379> zadd sortedset:list1 nani nani
+(error) ERR value is not a valid float
+127.0.0.1:6379> zadd sortedset:list2 test test
+(error) ERR value is not a valid float
+127.0.0.1:6379> zadd sortedset:list1 5 sid
+(integer) 1
+127.0.0.1:6379> zadd sortedset: list1 6 gauti 9 kholi
+(error) ERR syntax error
+127.0.0.1:6379> zadd sortedset:list1 6 gauti 9 kholi
+(integer) 2
+127.0.0.1:6379> zrange sortedset:list1 0 -1
+1) "sid"
+2) "gauti"
+3) "ashok"
+4) "kholi"
+127.0.0.1:6379> zrange sortedset:list1 0 2
+1) "sid"
+2) "gauti"
+3) "ashok"
+127.0.0.1:6379> zrevrange sortedset:list1 0 -1
+1) "kholi"
+2) "ashok"
+3) "gauti"
+4) "sid"
+127.0.0.1:6379> zrevrange sortedset:list1 0 2
+1) "kholi"
+2) "ashok"
+3) "gauti"
+127.0.0.1:6379> ZREMRANGEBYSCORE sortedset:list1 4 6
+(integer) 2
