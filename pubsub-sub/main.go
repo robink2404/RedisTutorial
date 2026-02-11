@@ -1,35 +1,40 @@
 package main
 
 import (
-	"context"
-	"fmt"
+    "context"
+    "fmt"
+    "time"
 
-	"github.com/redis/go-redis/v9"
+    "github.com/redis/go-redis/v9"
 )
 
 func main() {
-	ctx := context.Background()
+    ctx := context.Background()
 
-	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-	})
+    // Initialize Redis client for publishing
+    client := redis.NewClient(&redis.Options{
+        Addr: "localhost:6379",
+    })
 
-	// Subscribe to channel
-	pubsub := client.Subscribe(ctx, "GoMessage")
+    // ============================================
+    // PUBLISH: Send messages to subscribers
+    // ============================================
 
-	// Ensure subscription is active
-	_, err := pubsub.Receive(ctx)
-	if err != nil {
-		panic(err)
-	}
+    // Publish messages to "GoMessage" channel
+    // Returns number of subscribers that received the message
+    for i := 1; i <= 5; i++ {
+        message := fmt.Sprintf("Hello from Publisher #%d", i)
+        
+        // Publish message to channel
+        // Parameters: context, channel name, message payload
+        numSubscribers, err := client.Publish(ctx, "GoMessage", message).Result()
+        if err != nil {
+            panic(err)
+        }
 
-	fmt.Println("Subscribed to channel: GoMessage")
+        fmt.Printf("📤 Published message to %d subscribers: %s\n", numSubscribers, message)
+        time.Sleep(1 * time.Second)
+    }
 
-	// Channel to receive messages
-	ch := pubsub.Channel()
-
-	// Listen for messages
-	for msg := range ch {
-		fmt.Printf("📩 Received message from %s: %s\n", msg.Channel, msg.Payload)
-	}
+    fmt.Println("✅ All messages published!")
 }
